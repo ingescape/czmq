@@ -328,7 +328,7 @@
 #       include <systemd/sd-daemon.h>
 #   endif
 #   if (defined (HAVE_GETIFADDRS))
-#       if (defined (__UTYPE_OSX))
+#       if (defined (__UTYPE_OSX) || defined (__UTYPE_IOS))
 #           include <net/ethernet.h>     //  For struct sockaddr_dl
 #           include <net/if_dl.h>
 #           include <net/if_types.h>
