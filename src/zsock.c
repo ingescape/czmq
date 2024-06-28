@@ -945,7 +945,7 @@ zsock_vsend (void *self, const char *picture, va_list argptr)
             zframe_t *frame = zlistx_pack (list);
             zmsg_append (msg, &frame);
         }
-#endif	
+#endif
         else
         if (*picture == 'm') {
             zframe_t *frame;
@@ -1174,7 +1174,7 @@ zsock_vrecv (void *self, const char *picture, va_list argptr)
             }
             zframe_destroy (&frame);
         }
-#ifdef CZMQ_BUILD_DRAFT_API	
+#ifdef CZMQ_BUILD_DRAFT_API
         else
         if (*picture == 'l') {
             zframe_t *frame = zmsg_pop (msg);
@@ -2208,7 +2208,7 @@ zsock_test (bool verbose)
 #ifdef ZMQ_STREAM
     zsock_t *streamrecv = zsock_new(ZMQ_STREAM);
     assert (streamrecv);
-    port = zsock_bind(streamrecv, "tcp://*:*");
+    port = zsock_bind(streamrecv, "tcp://127.0.0.1:*");
     assert(port > 0);
 
     zsock_t *streamsender = zsock_new(ZMQ_STREAM);
@@ -2401,7 +2401,7 @@ zsock_test (bool verbose)
     char* message;
     message = zstr_recv (gather);
     assert (streq(message, "HELLO"));
-    zstr_free (&message);    
+    zstr_free (&message);
 
     zsock_destroy (&gather);
     zsock_destroy (&scatter);
