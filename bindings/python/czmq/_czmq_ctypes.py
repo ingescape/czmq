@@ -9190,6 +9190,10 @@ lib.zhttp_request_set_content_const.restype = None
 lib.zhttp_request_set_content_const.argtypes = [zhttp_request_p, c_char_p]
 lib.zhttp_request_reset_content.restype = None
 lib.zhttp_request_reset_content.argtypes = [zhttp_request_p]
+lib.zhttp_request_set_username.restype = None
+lib.zhttp_request_set_username.argtypes = [zhttp_request_p, c_char_p]
+lib.zhttp_request_set_password.restype = None
+lib.zhttp_request_set_password.argtypes = [zhttp_request_p, c_char_p]
 lib.zhttp_request_match.restype = c_bool
 lib.zhttp_request_match.argtypes = [zhttp_request_p, c_char_p, c_char_p]
 lib.zhttp_request_test.restype = None
@@ -9345,6 +9349,18 @@ The content is assumed to be constant-memory and will therefore not be copied or
         Set the content to NULL
         """
         return lib.zhttp_request_reset_content(self._as_parameter_)
+
+    def set_username(self, username):
+        """
+        Set the request username
+        """
+        return lib.zhttp_request_set_username(self._as_parameter_, username)
+
+    def set_password(self, password):
+        """
+        Set the request password
+        """
+        return lib.zhttp_request_set_password(self._as_parameter_, password)
 
     def match(self, method, path, *args):
         """
@@ -9559,6 +9575,8 @@ lib.zosc_fromframe.restype = zosc_p
 lib.zosc_fromframe.argtypes = [zframe_p]
 lib.zosc_frommem.restype = zosc_p
 lib.zosc_frommem.argtypes = [c_void_p, c_size_t]
+lib.zosc_fromstring.restype = zosc_p
+lib.zosc_fromstring.argtypes = [c_char_p]
 lib.zosc_create.restype = zosc_p
 lib.zosc_create.argtypes = [c_char_p, c_char_p]
 lib.zosc_size.restype = c_size_t
@@ -9581,6 +9599,8 @@ lib.zosc_packx.restype = zframe_p
 lib.zosc_packx.argtypes = [POINTER(zosc_p)]
 lib.zosc_unpack.restype = zosc_p
 lib.zosc_unpack.argtypes = [zframe_p]
+lib.zosc_dump.restype = POINTER(c_char)
+lib.zosc_dump.argtypes = [zosc_p]
 lib.zosc_print.restype = None
 lib.zosc_print.argtypes = [zosc_p]
 lib.zosc_is.restype = c_bool
@@ -9694,6 +9714,14 @@ the zframe.
 and calling free on the data after construction.
         """
         return Zosc(lib.zosc_frommem(data, size), True)
+
+    @staticmethod
+    def fromstring(oscstring):
+        """
+        Create a new zosc message from a string. This the same syntax as
+zosc_create but written as a single line string.
+        """
+        return Zosc(lib.zosc_fromstring(oscstring), True)
 
     @staticmethod
     def create(address, format, *args):
@@ -9818,6 +9846,12 @@ Take ownership of the chunk.
         Transform a zframe into a zosc.
         """
         return Zosc(lib.zosc_unpack(frame), True)
+
+    def dump(self):
+        """
+        Return a string describing the the OSC message. The returned string must be freed by the caller.
+        """
+        return return_fresh_string(lib.zosc_dump(self._as_parameter_))
 
     def print(self):
         """

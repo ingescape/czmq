@@ -9249,6 +9249,8 @@ NAN_MODULE_INIT (ZhttpRequest::Init) {
     Nan::SetPrototypeMethod (tpl, "setContent", _set_content);
     Nan::SetPrototypeMethod (tpl, "setContentConst", _set_content_const);
     Nan::SetPrototypeMethod (tpl, "resetContent", _reset_content);
+    Nan::SetPrototypeMethod (tpl, "setUsername", _set_username);
+    Nan::SetPrototypeMethod (tpl, "setPassword", _set_password);
     Nan::SetPrototypeMethod (tpl, "match", _match);
     Nan::SetPrototypeMethod (tpl, "test", _test);
 
@@ -9414,6 +9416,36 @@ NAN_METHOD (ZhttpRequest::_set_content_const) {
 NAN_METHOD (ZhttpRequest::_reset_content) {
     ZhttpRequest *zhttp_request = Nan::ObjectWrap::Unwrap <ZhttpRequest> (info.Holder ());
     zhttp_request_reset_content (zhttp_request->self);
+}
+
+NAN_METHOD (ZhttpRequest::_set_username) {
+    ZhttpRequest *zhttp_request = Nan::ObjectWrap::Unwrap <ZhttpRequest> (info.Holder ());
+    char *username;
+    if (info [0]->IsUndefined ())
+        return Nan::ThrowTypeError ("method requires a `username`");
+    else
+    if (!info [0]->IsString ())
+        return Nan::ThrowTypeError ("`username` must be a string");
+    //else { // bjornw: remove brackets to keep scope
+    Nan::Utf8String username_utf8 (info [0].As<String>());
+    username = *username_utf8;
+         //} //bjornw end
+    zhttp_request_set_username (zhttp_request->self, (const char *)username);
+}
+
+NAN_METHOD (ZhttpRequest::_set_password) {
+    ZhttpRequest *zhttp_request = Nan::ObjectWrap::Unwrap <ZhttpRequest> (info.Holder ());
+    char *password;
+    if (info [0]->IsUndefined ())
+        return Nan::ThrowTypeError ("method requires a `password`");
+    else
+    if (!info [0]->IsString ())
+        return Nan::ThrowTypeError ("`password` must be a string");
+    //else { // bjornw: remove brackets to keep scope
+    Nan::Utf8String password_utf8 (info [0].As<String>());
+    password = *password_utf8;
+         //} //bjornw end
+    zhttp_request_set_password (zhttp_request->self, (const char *)password);
 }
 
 NAN_METHOD (ZhttpRequest::_match) {
@@ -9679,6 +9711,7 @@ NAN_MODULE_INIT (Zosc::Init) {
     Nan::SetPrototypeMethod (tpl, "pack", _pack);
     Nan::SetPrototypeMethod (tpl, "packx", _packx);
     Nan::SetPrototypeMethod (tpl, "unpack", _unpack);
+    Nan::SetPrototypeMethod (tpl, "dump", _dump);
     Nan::SetPrototypeMethod (tpl, "print", _print);
     Nan::SetPrototypeMethod (tpl, "popInt32", _pop_int32);
     Nan::SetPrototypeMethod (tpl, "popInt64", _pop_int64);
@@ -9838,6 +9871,12 @@ NAN_METHOD (Zosc::_unpack) {
     //      info.GetReturnValue ().Set (info.This ());
         info.GetReturnValue ().Set (Nan::New<Boolean>(true));
     }
+}
+
+NAN_METHOD (Zosc::_dump) {
+    Zosc *zosc = Nan::ObjectWrap::Unwrap <Zosc> (info.Holder ());
+    char *result = (char *) zosc_dump (zosc->self);
+    info.GetReturnValue ().Set (Nan::New (result).ToLocalChecked ());
 }
 
 NAN_METHOD (Zosc::_print) {

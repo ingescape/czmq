@@ -962,6 +962,8 @@ module CZMQ
       attach_function :zhttp_request_set_content, [:pointer, :pointer], :void, **opts
       attach_function :zhttp_request_set_content_const, [:pointer, :string], :void, **opts
       attach_function :zhttp_request_reset_content, [:pointer], :void, **opts
+      attach_function :zhttp_request_set_username, [:pointer, :string], :void, **opts
+      attach_function :zhttp_request_set_password, [:pointer, :string], :void, **opts
       attach_function :zhttp_request_match, [:pointer, :string, :string, :varargs], :bool, **opts
       attach_function :zhttp_request_test, [:bool], :void, **opts
 
@@ -989,6 +991,7 @@ module CZMQ
       attach_function :zosc_new, [:string], :pointer, **opts
       attach_function :zosc_fromframe, [:pointer], :pointer, **opts
       attach_function :zosc_frommem, [:pointer, :size_t], :pointer, **opts
+      attach_function :zosc_fromstring, [:string], :pointer, **opts
       attach_function :zosc_create, [:string, :string, :varargs], :pointer, **opts
       attach_function :zosc_destroy, [:pointer], :void, **opts
       attach_function :zosc_size, [:pointer], :size_t, **opts
@@ -1001,6 +1004,7 @@ module CZMQ
       attach_function :zosc_pack, [:pointer], :pointer, **opts
       attach_function :zosc_packx, [:pointer], :pointer, **opts
       attach_function :zosc_unpack, [:pointer], :pointer, **opts
+      attach_function :zosc_dump, [:pointer], :pointer, **opts
       attach_function :zosc_print, [:pointer], :void, **opts
       attach_function :zosc_is, [:pointer], :bool, **opts
       attach_function :zosc_first, [:pointer, :pointer], :pointer, **opts
